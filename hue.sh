@@ -12,31 +12,29 @@ all="1 2 3 4 5"
 
 # validate input
 if [ $# -lt 2 ]; then
-	echo ""
-	echo "usage:  $0 <group> (all|living|bed) <state> (on|off|party)"
-	echo ""
-	exit 1
+        echo ""
+        echo "usage:  $0 <group> (all|living|bed) <state> (on|off|party)"
+        echo ""
+        exit 1
 fi
 
 if [ $2 = "on" ]; then
-	if [ $# -lt 3 ]; then
-		echo ""
-		echo "usage:  $0 $1 $2 <intensity> (low|medium|high)"
-		echo ""
-		exit 1
-	fi
+        if [ $# -lt 3 ]; then
+                echo ""
+                echo "usage:  $0 $1 $2 <intensity> (low|medium|high)"
+                echo ""
+                exit 1
+        fi
 fi
 
 
 # traphandler function to turn off party mode
 traphandler () {
-	echo ""
-	echo "	turning off party mode"
-        for light in $lights; do
-                curl -X PUT -d '{"on":false,"effect":"none"}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-		usleep 100000
-        done
-	echo ""
+        echo ""
+        echo "  turning off party mode"
+                lights_off
+                lights_off
+        echo ""
         exit 1234
 }
 trap traphandler SIGHUP SIGINT SIGTERM
@@ -44,11 +42,11 @@ trap traphandler SIGHUP SIGINT SIGTERM
 
 # define lights
 if [ $group = "living" ]; then
-	lights="$living"
+        lights="$living"
 elif [ $group = "bed" ]; then
-	lights="$bed"
+        lights="$bed"
 elif [ $group = "all" ]; then
-	lights="$all"
+        lights="$all"
 fi
 
 
@@ -59,50 +57,51 @@ bridge="192.168.0.209"
 
 # light on function
 lights_on () {
-	if [ $intensity = "low" ]; then
-		for light in $lights; do
-			curl -X PUT -d '{"on":true,"ct":500}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-		done
-	elif [ $intensity = "medium" ]; then
-		for light in $lights; do
-			curl -X PUT -d '{"on":true,"ct":300}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-		done
-	elif [ $intensity = "high" ]; then
-		for light in $lights; do
-			curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-		done
-	fi
+        if [ $intensity = "low" ]; then
+                for light in $lights; do
+                        curl -X PUT -d '{"on":true,"ct":500}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                done
+        elif [ $intensity = "medium" ]; then
+                for light in $lights; do
+                        curl -X PUT -d '{"on":true,"ct":300}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                done
+        elif [ $intensity = "high" ]; then
+                for light in $lights; do
+                        curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                done
+        fi
 }
 
 
 # light off function
 lights_off () {
-	for light in $lights; do
-		curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-	done
+        for light in $lights; do
+                curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+        done
 }
 
 
 # party function
 lights_party () {
-	while true; do
-		for light in $lights; do
-			bri=`shuf -i 0-255 -n 1`
-			hue=`shuf -i 0-65535 -n 1`
-			sat=`shuf -i 0-255 -n 1`
-			curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			# curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			usleep 100000
-		done
-	done
+        for light in $lights; do
+                curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+        done
+        while true; do
+                for light in $lights; do
+                        bri=`shuf -i 0-255 -n 1`
+                        hue=`shuf -i 0-65535 -n 1`
+                        sat=`shuf -i 0-255 -n 1`
+                        curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                done
+        done
 }
 
 
 # turn lights on and off
 if [ $2 = "on" ]; then
-	lights_on
+        lights_on
 elif [ $2 = "off" ]; then
-	lights_off
+        lights_off
 elif [ $2 = "party" ]; then
-	lights_party
+        lights_party
 fi
