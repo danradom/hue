@@ -21,7 +21,7 @@ fi
 if [ $2 = "on" ]; then
         if [ $# -lt 3 ]; then
                 echo ""
-                echo "usage:  $0 $1 $2 <intensity> (low|medium|high)"
+                echo "usage:  $0 $1 $2 <intensity> (low|medium|high|random)"
                 echo ""
                 exit 1
         fi
@@ -68,6 +68,13 @@ lights_on () {
         elif [ $intensity = "high" ]; then
                 for light in $lights; do
                         curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                done
+        elif [ $intensity = "random" ]; then
+                for light in $lights; do
+                        bri=`shuf -i 0-255 -n 1`
+                        hue=`shuf -i 0-65535 -n 1`
+                        sat=`shuf -i 0-255 -n 1`
+                        curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 done
         fi
 }
