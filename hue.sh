@@ -52,22 +52,22 @@ fi
 
 # define connection hash and bridge IP
 hash="3f2c333c592c232c4e2c5340532c4334"
-bridge="192.168.0.209"
+bridge="192.168.0.2"
 
 
 # light on function
 lights_on () {
         if [ $intensity = "low" ]; then
                 for light in $lights; do
-                        curl -X PUT -d '{"on":true,"ct":500}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        curl -X PUT -d '{"on":true,"hue":14950,"bri":49,"sat":142}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 done
         elif [ $intensity = "medium" ]; then
                 for light in $lights; do
-                        curl -X PUT -d '{"on":true,"ct":300}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        curl -X PUT -d '{"on":true,"hue":14950,"bri":174,"sat":142}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 done
         elif [ $intensity = "high" ]; then
                 for light in $lights; do
-                        curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        curl -X PUT -d '{"on":true,"hue":14950,"bri":254,"sat":142}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 done
         elif [ $intensity = "random" ]; then
                 for light in $lights; do
