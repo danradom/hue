@@ -91,7 +91,10 @@ lights_off () {
 # party function
 lights_party () {
         for light in $lights; do
-                curl -X PUT -d '{"on":true,"ct":154}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                bri=`shuf -i 0-255 -n 1`
+                hue=`shuf -i 0-65535 -n 1`
+                sat=`shuf -i 0-255 -n 1`
+                curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
         done
         while true; do
                 for light in $lights; do
