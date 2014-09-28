@@ -14,7 +14,6 @@ all="1 2 3 4 5"
 if [ $# -lt 2 ]; then
         echo ""
         echo "usage:  $0 <group> (all|living|bed) <state> (on|off|party|status)"
-        echo "usage:  $0 status"
         echo ""
         exit 1
 fi
