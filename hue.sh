@@ -13,7 +13,8 @@ all="1 2 3 4 5"
 # validate input
 if [ $# -lt 2 ]; then
         echo ""
-        echo "usage:  $0 <group> (all|living|bed) <state> (on|off|party)"
+        echo "usage:  $0 <group> (all|living|bed) <state> (on|off|party|status)"
+        echo "usage:  $0 status"
         echo ""
         exit 1
 fi
@@ -107,6 +108,17 @@ lights_party () {
 }
 
 
+# status function
+lights_status () {
+for light in $lights; do
+        echo ""
+        echo "light # $light status:"
+        curl -X GET -s "http://$bridge/api/$hash/lights/$light"
+        echo ""
+done
+}
+
+
 # turn lights on and off
 if [ $2 = "on" ]; then
         lights_on
@@ -114,4 +126,6 @@ elif [ $2 = "off" ]; then
         lights_off
 elif [ $2 = "party" ]; then
         lights_party
+elif [ $2 = "status" ]; then
+        lights_status
 fi
