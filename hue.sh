@@ -33,7 +33,6 @@ traphandler () {
         echo ""
         echo "  turning off party mode"
                 lights_off
-                lights_off
         echo ""
         exit 1234
 }
