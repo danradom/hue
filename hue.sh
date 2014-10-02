@@ -146,7 +146,7 @@ for light in $lights; do
         bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
         echo "light $light"
         if [ $on = "true" ]; then
-                echo "  state ON"
+                echo "state ON"
         elif [ $on = "false" ]; then
                 echo "state OFF"
         fi
