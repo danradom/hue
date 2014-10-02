@@ -50,7 +50,7 @@ fi
 
 
 # define connection hash and bridge IP
-hash="3f2c333c592c232c4e2c5340532c4334"
+hash="newdeveloper"
 bridge="192.168.0.2"
 
 
@@ -83,6 +83,8 @@ lights_on () {
 lights_off () {
         for light in $lights; do
                 curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                usleep 500000
+                curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
         done
 }
 
@@ -111,8 +113,16 @@ lights_status () {
 for light in $lights; do
         echo ""
         echo "light # $light status:"
-        curl -X GET -s "http://$bridge/api/$hash/lights/$light"
-        echo ""
+        on=`curl -X GET -s "http://$bridge/api/$hash/lights/1" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/1" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
+        hue=`curl -X GET -s "http://$bridge/api/$hash/lights/1" |cut -d, -f3 |cut -d: -f2`
+        sat=`curl -X GET -s "http://$bridge/api/$hash/lights/1" |cut -d, -f4 |cut -d: -f2`
+        bri=`curl -X GET -s "http://$bridge/api/$hash/lights/1" |cut -d, -f2 |cut -d: -f2`
+        echo "on = $on"
+        echo "reachable = $reachable"
+        echo "hue = $hue"
+        echo "saturation = $sat"
+        echo "brightness = $bri"
 done
 }
 
