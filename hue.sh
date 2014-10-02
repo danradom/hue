@@ -53,7 +53,7 @@ fi
 
 
 # define connection hash and bridge IP
-hash="newdeveloper"
+hash="228a806218fe54d7173fa37e32948ae3"
 bridge="192.168.0.2"
 
 
