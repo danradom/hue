@@ -93,9 +93,11 @@ lights_on () {
                         hue=`shuf -i 0-65535 -n 1`
                         sat=`shuf -i 0-255 -n 1`
                         if [ $on = "true" ]; then
-                                curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                # curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         elif [ $on = "false" ]; then
-                                curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                # curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         fi
                 done
         fi
@@ -122,7 +124,8 @@ lights_party () {
                         bri=`shuf -i 0-255 -n 1`
                         hue=`shuf -i 0-65535 -n 1`
                         sat=`shuf -i 0-255 -n 1`
-                        curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        # curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 fi
         done
         while true; do
@@ -130,7 +133,9 @@ lights_party () {
                         bri=`shuf -i 0-255 -n 1`
                         hue=`shuf -i 0-65535 -n 1`
                         sat=`shuf -i 0-255 -n 1`
-                        curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        # curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        usleep 100000
                 done
         done
 }
