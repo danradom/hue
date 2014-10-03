@@ -1,1 +1,1 @@
-Bash scripts I wrote to contol my lights
+Bash scripts I wrote to contol my Philips Hue and Hue Lux lights
