@@ -4,7 +4,7 @@ color=$2
 
 if [ $# -ne 2 ]; then
         echo ""
-        echo "usage:  $0 <group> (living|all|kitchen|bed) <color> (blue|red|green|yellow|orange|purple|pink|warm)"
+        echo "usage:  $0 <group> (living|all|kitchen|bed) <color> (blue|red|green|yellow|orange|purple|pink|warm|tv)"
         echo ""
         exit 1
 fi
@@ -43,6 +43,7 @@ yellow="16384"
 purple="49408"
 pink="54553"
 warm="14708"
+tv="47812"
 
 
 if [ "$color" = "blue" ]; then
@@ -76,5 +77,9 @@ elif [ "$color" = "pink" ]; then
 elif [ "$color" = "warm" ]; then
         for light in $lights; do
                 curl -X PUT -d '{"on":true,"bri":150,"hue":'$warm',"sat":255}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+        done
+elif [ "$color" = "tv" ]; then
+        for light in $lights; do
+                curl -X PUT -d '{"on":true,"bri":15,"hue":'$tv',"sat":255}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
         done
 fi
