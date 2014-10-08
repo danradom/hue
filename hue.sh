@@ -6,15 +6,16 @@ intensity=$3
 
 # define groups
 living="1 2 3 4"
-kitchen="5 6 7 8"
+kitchen="5 6 7 8 12"
 bed="9"
-all="1 2 3 4 5 6 7 8 9"
+sink="12"
+all="1 2 3 4 5 6 7 8 9 12"
 
 
 # validate input
 if [ $# -lt 2 ]; then
         echo ""
-        echo "usage:  $0 <group> (all|living|kitchen|bed) <state> (on|off|party|status)"
+        echo "usage:  $0 <group> (all|living|kitchen|bed|sink) <state> (on|off|party|status)"
         echo ""
         exit 1
 fi
@@ -49,6 +50,8 @@ elif [ $group = "all" ]; then
         lights="$all"
 elif [ $group = "kitchen" ]; then
         lights="$kitchen"
+elif [ $group = "sink" ]; then
+        lights="$sink"
 fi
 
 
@@ -89,9 +92,9 @@ lights_on () {
         elif [ $intensity = "random" ]; then
                 for light in $lights; do
                         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-                        bri=`shuf -i 0-255 -n 1`
+                        bri=`shuf -i 0-254 -n 1`
                         hue=`shuf -i 0-65535 -n 1`
-                        sat=`shuf -i 0-255 -n 1`
+                        sat=`shuf -i 0-254 -n 1`
                         if [ $on = "true" ]; then
                                 # curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                                 curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
@@ -121,18 +124,18 @@ lights_party () {
         for light in $lights; do
                 on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
                 if [ $on = "false" ]; then
-                        bri=`shuf -i 0-255 -n 1`
+                        bri=`shuf -i 0-254 -n 1`
                         hue=`shuf -i 0-65535 -n 1`
-                        sat=`shuf -i 0-255 -n 1`
+                        sat=`shuf -i 0-254 -n 1`
                         # curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         curl -X PUT -d '{"on":true,"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                 fi
         done
         while true; do
                 for light in $lights; do
-                        bri=`shuf -i 0-255 -n 1`
+                        bri=`shuf -i 0-254 -n 1`
                         hue=`shuf -i 0-65535 -n 1`
-                        sat=`shuf -i 0-255 -n 1`
+                        sat=`shuf -i 0-254 -n 1`
                         # curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"effect":"colorloop","transitiontime":2}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         curl -X PUT -d '{"bri":'$bri',"sat":'$sat',"hue":'$hue'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         usleep 100000
