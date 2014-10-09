@@ -6,7 +6,7 @@ intensity=$3
 
 # define groups
 living="1 2 3 4"
-kitchen="5 6 7 8 12"
+kitchen="5 6 7 8"
 bed="9"
 sink="12"
 all="1 2 3 4 5 6 7 8 9 12"
