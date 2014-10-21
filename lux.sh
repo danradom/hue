@@ -111,7 +111,9 @@ for light in $lights; do
         elif [ $reachable = "false" ]; then
                 echo "  reachable NO"
         fi
-        echo "  brightness : $bri"
+        if [ $on = "true" ]; then
+                echo "  brightness : $bri"
+        fi
         echo ""
 done
 }
