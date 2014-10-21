@@ -163,9 +163,11 @@ for light in $lights; do
         elif [ $reachable = "false" ]; then
                 echo "reachable NO"
         fi
-        echo "  color hue : $hue"
-        echo "  color saturation : $sat"
-        echo "  color brightness : $bri"
+        if [ $on = "true" ]; then
+                echo "  color hue : $hue"
+                echo "  color saturation : $sat"
+                echo "  color brightness : $bri"
+        fi
         echo ""
         echo ""
 done
