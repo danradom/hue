@@ -1,1 +1,1 @@
-Bash / shell scripts I wrote to contol my Philips Hue and Hue Lux lights
+bash / shell scripts I wrote to contol my Philips Hue and Hue Lux lights
