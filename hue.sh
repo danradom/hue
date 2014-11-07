@@ -7,9 +7,10 @@ intensity=$3
 # define groups
 living="1 2 3 4"
 kitchen="5 6 7 8"
-bed="9"
-sink="12"
-all="1 2 3 4 5 6 7 8 9 12"
+bed="10"
+sink="9"
+strip="13"
+all="1 2 3 4 5 6 7 8 9 10 13"
 
 
 # validate input
@@ -52,6 +53,8 @@ elif [ $group = "kitchen" ]; then
         lights="$kitchen"
 elif [ $group = "sink" ]; then
         lights="$sink"
+elif [ $group = "strip" ]; then
+        lights="$strip"
 fi
 
 
@@ -148,7 +151,9 @@ lights_party () {
 lights_status () {
 for light in $lights; do
         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
+        if [ $light != 13 ]; then
+                reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
+        fi
         hue=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f3 |cut -d: -f2`
         sat=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f4 |cut -d: -f2`
         bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
@@ -158,10 +163,12 @@ for light in $lights; do
         elif [ $on = "false" ]; then
                 echo "state OFF"
         fi
-        if [ $reachable = "true" ]; then
-                echo "reachable YES"
-        elif [ $reachable = "false" ]; then
-                echo "reachable NO"
+        if [ $light != 13 ]; then
+                if [ $reachable = "true" ]; then
+                        echo "reachable YES"
+                elif [ $reachable = "false" ]; then
+                        echo "reachable NO"
+                fi
         fi
         if [ $on = "true" ]; then
                 echo "  color hue : $hue"
