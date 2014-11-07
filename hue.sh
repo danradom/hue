@@ -151,7 +151,9 @@ lights_party () {
 lights_status () {
 for light in $lights; do
         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-        if [ $light != 13 ]; then
+        if [ $light = 13 ]; then
+                reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f10 |cut -d: -f2 |sed 's/}//'`
+        else
                 reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
         fi
         hue=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f3 |cut -d: -f2`
@@ -163,12 +165,10 @@ for light in $lights; do
         elif [ $on = "false" ]; then
                 echo "state OFF"
         fi
-        if [ $light != 13 ]; then
-                if [ $reachable = "true" ]; then
-                        echo "reachable YES"
-                elif [ $reachable = "false" ]; then
-                        echo "reachable NO"
-                fi
+        if [ $reachable = "true" ]; then
+                echo "reachable YES"
+        elif [ $reachable = "false" ]; then
+                echo "reachable NO"
         fi
         if [ $on = "true" ]; then
                 echo "  color hue : $hue"
