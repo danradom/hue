@@ -38,116 +38,122 @@ if [ $group = "living" ]; then
 elif [ $group = "kitchen" ]; then
         lights="$kitchen"
 elif [ $group = "sink" ]; then
-	lights="$sink"
+        lights="$sink"
 elif [ $group = "hall" ]; then
-	lights="$hall"
+        lights="$hall"
 elif [ $group = "bedroom" ]; then
-	lights="$bedroom"
+        lights="$bedroom"
 elif [ $group = "sam" ]; then
-	lights="$sam"
+        lights="$sam"
 elif [ $group = "bailey" ]; then
-	lights="$bailey"
+        lights="$bailey"
 elif [ $group = "front" ]; then
-	lights="$front"
+        lights="$front"
 elif [ $group = "garage" ]; then
-	lights="$garage"
+        lights="$garage"
 elif [ $group = "back" ]; then
-	lights="$back"
+        lights="$back"
 elif [ $group = "outside" ]; then
-	lights="$outside"
+        lights="$outside"
 elif [ $group = "honda" ]; then
-	lights="$honda"
+        lights="$honda"
 elif [ $group = "bus" ]; then
-	lights="$bus"
+        lights="$bus"
 elif [ $group = "away" ]; then
-	lights="$away"
+        lights="$away"
 elif [ $group = "overnight" ]; then
-	lights="$overnight"
+        lights="$overnight"
 elif [ $group = "all" ]; then
-	lights="$all"
+        lights="$all"
 elif [ $group -eq $group ]; then
-	lights="$group"
+        lights="$group"
 fi
 
 
 # light on function
 light_on () {
-	for light in $lights; do
-		ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"type/type/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
-        	if [ `echo $ltype |grep -c Dimmable` = 1 ]; then
-        	        type="lux"
-        	else
-        	        type="hue"
-        	fi
-		if [ "$type" = "lux" ]; then
-			on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-			if [ $on = "true" ]; then
-				curl -X PUT -d '{"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			elif [ $on = "false" ]; then
-				curl -X PUT -d '{"on":true,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			fi
-		fi
-		if [ "$type" = "hue" ]; then
-			on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-			if [ $on = "true" ]; then
-				curl -X PUT -d '{"ct":365,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			elif [ $on = "false" ]; then
-				curl -X PUT -d '{"on":true,"ct":365,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			fi
-		fi
-	done
+        for light in $lights; do
+                ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"type/type/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
+                if [ `echo $ltype |grep -c Dimmable` = 1 ]; then
+                        type="lux"
+                else
+                        type="hue"
+                fi
+                if [ "$type" = "lux" ]; then
+                        on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+                        if [ $on = "true" ]; then
+                                curl -X PUT -d '{"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        elif [ $on = "false" ]; then
+                                curl -X PUT -d '{"on":true,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        fi
+                fi
+                if [ "$type" = "hue" ]; then
+                        on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+                        if [ $on = "true" ]; then
+                                curl -X PUT -d '{"ct":365,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        elif [ $on = "false" ]; then
+                                curl -X PUT -d '{"on":true,"ct":365,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        fi
+                fi
+        done
 }
 
 
 # light off function
 light_off () {
-	for light in $lights; do
-		on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-		while [ $on = "true" ]; do
-			curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
-			on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-		done
-	done
+        for light in $lights; do
+                on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+                while [ $on = "true" ]; do
+                        curl -X PUT -d '{"on":false}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                        on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+                done
+        done
 }
 
 
 # light status function
 light_status () {
-	for light in $lights; do
-		ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"type/type/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
-       		if [ `echo $ltype |grep -c Dimmable` = 1 ]; then
-        	        type="lux"
-        	else
-        	        type="hue"
-        	fi
-	        on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
-       		if [ $type = "lux" ]; then
-        	        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f5 |cut -d: -f2 |sed 's/}//'`
-        	elif [ $type = "hue" ]; then
-               		reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
-	        fi
-	        bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
-	        echo "light: $light"
-	        echo "type:  $type"
+        for light in $lights; do
+                ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"type/type/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
+                if [ `echo $ltype |grep -c Dimmable` = 1 ]; then
+                        type="lux"
+                else
+                        type="hue"
+                fi
+                on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
+                if [ $type = "lux" ]; then
+                        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f5 |cut -d: -f2 |sed 's/}//'`
+                elif [ $type = "hue" ]; then
+                        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
+                        if [ $on = "true" ]; then
+                                ct=`curl -X GET -s "http://$bridge/api/$hash/lights/5" |cut -d, -f7 |cut -d: -f2 |sed 's/}//'`
+                        fi
+                fi
+                bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
+                echo "light: $light"
+                echo "type:  $type"
 
-	        if [ $on = "true" ]; then
-	                echo "	state ON"
-	        elif [ $on = "false" ]; then
-	                echo "	state OFF"
-	        fi
+                if [ $on = "true" ]; then
+                        echo "  state ON"
+                elif [ $on = "false" ]; then
+                        echo "  state OFF"
+                fi
 
-	        if [ $reachable = "true" ]; then
-	                echo "	reachable YES"
-	        elif [ $reachable = "false" ]; then
-	                echo "	reachable NO"
-	        fi
+                if [ $reachable = "true" ]; then
+                        echo "  reachable YES"
+                elif [ $reachable = "false" ]; then
+                        echo "  reachable NO"
+                fi
 
-	        if [ $on = "true" ]; then
-	                echo "	brightness : $bri"
-	        fi
-		echo ""
-		echo ""
-	done
+                if [ $on = "true" ]; then
+                        echo "  brightness: $bri"
+                fi
+                if [ $type = "hue" ] && [ $on = "true" ]; then
+                        echo "  color temp: $ct"
+                fi
+                echo ""
+                echo ""
+        done
 }
 
 
@@ -157,5 +163,5 @@ if [ $2 = "on" ]; then
 elif [ $2 = "off" ]; then
         light_off
 elif [ $2 = "status" ]; then
-	light_status
+        light_status
 fi
