@@ -137,7 +137,7 @@ light_status () {
                         fi
                 fi
                 bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
-                echo "light: $name"
+                echo "light $light: $name"
                 echo "type:  $type"
 
                 if [ $on = "true" ]; then
