@@ -133,27 +133,25 @@ light_status () {
                         fi
                 fi
 
-                echo "light $light: $name"
-                echo "type:  $type"
-
-                if [ $on = "true" ]; then
-                        echo "  state ON"
-                elif [ $on = "false" ]; then
-                        echo "  state OFF"
-                fi
+                echo "light $light:  $name"
+                echo "  type:  $type"
 
                 if [ $reachable = "true" ]; then
-                        echo "  reachable YES"
+                        echo "  reachable:  YES"
                 elif [ $reachable = "false" ]; then
-                        echo "  reachable NO"
+                        echo "  reachable:  NO"
                         sleep 2
                 fi
 
                 if [ $on = "true" ]; then
-                        echo "  brightness: $bri"
+                        echo "  state:  ON"
+                        echo "  brightness:  $bri"
+                elif [ $on = "false" ]; then
+                        echo "  state:  OFF"
                 fi
+
                 if [ $type = "hue" ] && [ $on = "true" ]; then
-                        echo "  color temp: $ct"
+                        echo "  color temp:  $ct"
                         echo "  colue hue:  $hue"
                 fi
                 echo ""
