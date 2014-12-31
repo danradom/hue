@@ -24,6 +24,7 @@ bailey="13"
 front="14"
 garage="15"
 back="16"
+inside="1 2 3 4 5 6 7 8 9 10 11 12 13 17 18"
 outside="14 15 16"
 honda="17"
 bus="18"
@@ -57,6 +58,8 @@ elif [ $group = "back" ]; then
         lights="$back"
 elif [ $group = "outside" ]; then
         lights="$outside"
+elif [ $group = "inside" ]; then
+        lights="$inside"
 elif [ $group = "honda" ]; then
         lights="$honda"
 elif [ $group = "bus" ]; then
@@ -121,8 +124,8 @@ light_status () {
                 bri=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f2 |cut -d: -f2`
                 if [ `echo $ltype |grep -c Dimmable` = 1 ]; then
                         type="lux"
-                        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f5 |cut -d: -f2 |sed 's/}//'`
-                        name=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f7 |cut -d: -f2 |sed -e 's/}//' -e 's/"//' -e 's/\"//'`
+                        reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f4 |cut -d: -f2 |sed 's/}//'`
+                        name=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f6 |cut -d: -f2 |sed -e 's/}//' -e 's/"//' -e 's/\"//'`
                 else
                         type="hue"
                         reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
@@ -133,26 +136,26 @@ light_status () {
                         fi
                 fi
 
-                echo "light $light:  $name"
-                echo "  type:  $type"
+                echo "$light: $name"
+                echo "  type:           $type"
 
                 if [ $reachable = "true" ]; then
-                        echo "  reachable:  YES"
+                        echo "  reachable:      YES"
                 elif [ $reachable = "false" ]; then
-                        echo "  reachable:  NO"
+                        echo "  reachable:      NO"
                         sleep 2
                 fi
 
                 if [ $on = "true" ]; then
-                        echo "  state:  ON"
-                        echo "  brightness:  $bri"
+                        echo "  state:          ON"
+                        echo "  brightness:     $bri"
                 elif [ $on = "false" ]; then
-                        echo "  state:  OFF"
+                        echo "  state:          OFF"
                 fi
 
                 if [ $type = "hue" ] && [ $on = "true" ]; then
-                        echo "  color temp:  $ct"
-                        echo "  colue hue:  $hue"
+                        echo "  color temp:     $ct"
+                        echo "  colue hue:      $hue"
                 fi
                 echo ""
                 echo ""
