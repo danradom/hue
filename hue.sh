@@ -131,7 +131,7 @@ light_status () {
                         reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f11 |cut -d: -f2 |sed 's/}//'`
                         name=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f13 |cut -d: -f2 |sed -e 's/}//' -e 's/"//' -e 's/\"//'`
                         if [ $on = "true" ]; then
-                                ct=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f7 |cut -d: -f2 |sed 's/}//'`
+                                ct=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f8 |cut -d: -f2 |sed 's/}//'`
                                 hue=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f3 |cut -d: -f2 |sed 's/}//'`
                         fi
                 fi
