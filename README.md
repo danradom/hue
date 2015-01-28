@@ -3,7 +3,7 @@ shell scripts I wrote to contol my Philips Hue and Hue Lux lights
 the script can be used to control lights by either group name or light number
 
 
-dr@nas /volume1/homes/dr $ hue all status
+<pre>dr@nas /volume1/homes/dr $ hue all status
 #   name               type       state      reachable  bri        hue
 ------------------------------------------------------------------------
 1    living room 1     hue        ON         YES        135        45417
