@@ -1,5 +1,5 @@
 #
-# $0 <group> on|off|status|state <brightness>"
+# $0 <group> on|off|status <brightness>"
 #
 
 # define connection hash and bridge IP
@@ -30,13 +30,11 @@ bus="17"
 honda="18"
 garage="17 18"
 upstairs="12 13"
-away="9 10 11 13 17"
+away="9 10 11 13 18"
 overnight="9 10 13"
 outside="14 15 16"
 lux="14 15 16 17 18"
 ls="19 20"
-ls1="19"
-ls2="20"
 all="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20"
 
 
@@ -81,10 +79,6 @@ elif [ $group = "lux" ]; then
         lights="$lux"
 elif [ $group = "ls" ]; then
         lights="$ls"
-elif [ $group = "ls1" ]; then
-        lights="$ls1"
-elif [ $group = "ls2" ]; then
-        lights="$ls2"
 elif [ $group = "all" ]; then
         lights="$all"
 elif [ $group -eq $group ]; then
@@ -141,7 +135,7 @@ light_off () {
 light_status () {
 
         printf "%-3s %-18s %-14s %-10s %-10s %-10s %-10s\n" "#" "name" "type" "state" "reachable" "bri" "hue"
-        echo "------------------------------------------------------------------------"
+        echo "------------------------------------------------------------------------------"
 
         for light in $lights; do
                 unset state reach chue on bri type reachable name type
