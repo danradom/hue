@@ -30,12 +30,13 @@ bus="17"
 honda="18"
 garage="17 18"
 upstairs="12 13"
-away="9 10 11 13 18"
-overnight="9 10 13"
+away="9 11 13 18 21"
+overnight="9 13 21"
 outside="14 15 16"
-lux="14 15 16 17 18"
+lux="14 15 16 17 18 21"
+lamp="21"
 ls="19 20"
-all="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20"
+all="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"
 
 
 # define lights
@@ -67,6 +68,8 @@ elif [ $group = "honda" ]; then
         lights="$honda"
 elif [ $group = "bus" ]; then
         lights="$bus"
+elif [ $group = "garage" ]; then
+        lights="$garage"
 elif [ $group = "upstairs" ]; then
         lights="$upstairs"
 elif [ $group = "away" ]; then
@@ -77,6 +80,8 @@ elif [ $group = "overnight" ]; then
         lights="$overnight"
 elif [ $group = "lux" ]; then
         lights="$lux"
+elif [ $group = "lamp" ]; then
+        lights="$lamp"
 elif [ $group = "ls" ]; then
         lights="$ls"
 elif [ $group = "all" ]; then
@@ -102,17 +107,17 @@ light_on () {
                         type="hue"
                         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
                         if [ $on = "true" ]; then
-                                curl -X PUT -d '{"ct":153,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"ct":369,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         elif [ $on = "false" ]; then
-                                curl -X PUT -d '{"on":true,"ct":153,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"on":true,"ct":369,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         fi
                 elif [ `echo $ltype |grep -c LST001` = 1 ]; then
                         type="lightstrip"
                         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
                         if [ $on = "true" ]; then
-                                curl -X PUT -d '{"ct":153,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"ct":369,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         elif [ $on = "false" ]; then
-                                curl -X PUT -d '{"on":true,"ct":153,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
+                                curl -X PUT -d '{"on":true,"ct":369,"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
                         fi
                 fi
         done
