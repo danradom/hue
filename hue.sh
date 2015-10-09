@@ -138,6 +138,7 @@ light_off () {
 
 # light status function
 light_status () {
+        clear
 
         printf "%-3s %-18s %-14s %-10s %-10s %-10s %-10s\n" "#" "name" "type" "state" "reachable" "bri" "hue"
         echo "------------------------------------------------------------------------------"
@@ -201,6 +202,7 @@ light_status () {
                 fi
 
         done
+        echo ""
 }
 
 
