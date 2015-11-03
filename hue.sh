@@ -3,7 +3,7 @@
 #
 
 # define connection hash and bridge IP
-hash="1234567890"
+hash="bdc667b3d1977cf3115958317e8d157"
 bridge="192.168.0.2"
 
 
