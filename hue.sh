@@ -1,5 +1,5 @@
 #
-# $0 <group> on|off|status <brightness>"
+# $0 <group> on|off|status <brightness (percent)>"
 #
 
 # define connection hash and bridge IP
@@ -94,7 +94,7 @@ fi
 # light on function
 light_on () {
         # determine brightness
-        bright=$(( $bri*254/100))
+        bright=$(($bri*254/100))
 
         for light in $lights; do
                 ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"modelid/modelid/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
