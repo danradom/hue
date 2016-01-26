@@ -10,7 +10,7 @@ bridge="192.168.0.2"
 # define input order
 group=$1
 state=$2
-bright=$3
+bri=$3
 
 
 # light groups
@@ -24,13 +24,13 @@ bailey="13"
 ofront="14"
 ogarage="15"
 oback="16"
-inside="1 2 3 4 5 6 7 8 9 10 11 12 13 17 18"
+inside="1 2 3 4 5 6 7 8 9 10 11 12 13 17 18 19 20"
 outside="14 15 16"
 bus="17"
 honda="18"
 garage="17 18"
 upstairs="12 13"
-away="9 11 13 18 21"
+away="1 9 11 13 18 21"
 overnight="9 13 21"
 outside="14 15 16"
 lux="14 15 16 17 18 21"
@@ -93,6 +93,9 @@ fi
 
 # light on function
 light_on () {
+        # determine brightness
+        bright=$(( $bri*254/100))
+
         for light in $lights; do
                 ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"modelid/modelid/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
                 if [ `echo $ltype |grep -c LWB004` = 1 ]; then
@@ -138,9 +141,10 @@ light_off () {
 
 # light status function
 light_status () {
-        if [ -t 1 ]; then
-                clear
-        fi
+
+if [ -t 1 ]; then
+        clear
+fi
 
         printf "%-3s %-18s %-14s %-10s %-10s %-10s %-10s\n" "#" "name" "type" "state" "reachable" "bri" "hue"
         echo "------------------------------------------------------------------------------"
