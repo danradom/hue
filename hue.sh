@@ -3,7 +3,7 @@
 #
 
 # define connection hash and bridge IP
-hash="bdc667b3d1977cf3115958317e8d157"
+hash="YOUR_HASH_HERE"
 bridge="192.168.0.2"
 
 
@@ -14,29 +14,13 @@ bri=$3
 
 
 # light groups
-living="1 2 3 4"
-kitchen="5 6 7 8"
-sink="9"
-hall="10"
-bedroom="11"
-sam="12"
-bailey="13"
-ofront="14"
-ogarage="15"
-oback="16"
-inside="1 2 3 4 5 6 7 8 9 10 11 12 13 17 18 19 20"
-outside="14 15 16"
-bus="17"
-honda="18"
-garage="17 18"
-upstairs="12 13"
-away="1 9 11 13 18 21"
-overnight="9 13 21"
-outside="14 15 16"
-lux="14 15 16 17 18 21"
-lamp="21"
-ls="19 20"
-all="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"
+living="1"
+kitchen="2"
+office="3"
+bedroom="4"
+garage="5"
+outside="6"
+all="1 2 3 4 5 6"
 
 
 # define lights
@@ -44,46 +28,14 @@ if [ $group = "living" ]; then
         lights="$living"
 elif [ $group = "kitchen" ]; then
         lights="$kitchen"
-elif [ $group = "sink" ]; then
-        lights="$sink"
-elif [ $group = "hall" ]; then
-        lights="$hall"
+elif [ $group = "office" ]; then
+        lights="$office"
 elif [ $group = "bedroom" ]; then
         lights="$bedroom"
-elif [ $group = "sam" ]; then
-        lights="$sam"
-elif [ $group = "bailey" ]; then
-        lights="$bailey"
-elif [ $group = "ofront" ]; then
-        lights="$ofront"
-elif [ $group = "ogarage" ]; then
-        lights="$ogarage"
-elif [ $group = "oback" ]; then
-        lights="$oback"
-elif [ $group = "outside" ]; then
-        lights="$outside"
-elif [ $group = "inside" ]; then
-        lights="$inside"
-elif [ $group = "honda" ]; then
-        lights="$honda"
-elif [ $group = "bus" ]; then
-        lights="$bus"
 elif [ $group = "garage" ]; then
         lights="$garage"
-elif [ $group = "upstairs" ]; then
-        lights="$upstairs"
-elif [ $group = "away" ]; then
-        lights="$away"
 elif [ $group = "outside" ]; then
         lights="$outside"
-elif [ $group = "overnight" ]; then
-        lights="$overnight"
-elif [ $group = "lux" ]; then
-        lights="$lux"
-elif [ $group = "lamp" ]; then
-        lights="$lamp"
-elif [ $group = "ls" ]; then
-        lights="$ls"
 elif [ $group = "all" ]; then
         lights="$all"
 elif [ $group -eq $group ]; then
@@ -94,12 +46,15 @@ fi
 # light on function
 light_on () {
         # determine brightness
+        if [ -z $bri ]; then
+                bri=100
+        fi
         bright=$(($bri*254/100))
 
         for light in $lights; do
                 ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"modelid/modelid/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
-                if [ `echo $ltype |grep -c LWB004` = 1 ]; then
-                        type="lux"
+                if [ `echo $ltype |grep -c LWB00[46]` = 1 ]; then
+                        type="white"
                         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
                         if [ $on = "true" ]; then
                                 curl -X PUT -d '{"bri":'$bright'}' http://$bridge/api/$hash/lights/$light/state > /dev/null 2>&1
@@ -152,8 +107,8 @@ fi
         for light in $lights; do
                 unset state reach chue on bri type reachable name type
                 ltype=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |sed -e 's/.*\"modelid/modelid/' -e 's/\,.*//' -e 's/type\": \"//' -e 's/\"//'`
-                if [ `echo $ltype |grep -c LWB004` = 1 ]; then
-                        type="lux"
+                if [ `echo $ltype |grep -c LWB00[46]` = 1 ]; then
+                        type="white"
                         on=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f1 |cut -d\{ -f3 |cut -d: -f2`
                         reachable=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f4 |cut -d: -f2 |sed 's/}//'`
                         name=`curl -X GET -s "http://$bridge/api/$hash/lights/$light" |cut -d, -f6 |cut -d: -f2 |sed -e 's/}//' -e 's/"//' -e 's/\"//'`
@@ -199,7 +154,7 @@ fi
                         if [ "$type" = "lightstrip" ]; then
                                 printf "%-3s %-18s %-14s %-10s %-10s %-10s %-10s\n" "$light" "$name" "$type" "$state" "$reach" "$bri" "$hue"
                         fi
-                        if [ "$type" = "lux" ]; then
+                        if [ "$type" = "white" ]; then
                                 printf "%-3s %-18s %-14s %-10s %-10s %-10s\n" "$light" "$name" "$type" "$state" "$reach" "$bri"
                         fi
                 fi
